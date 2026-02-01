@@ -1,0 +1,598 @@
+    <!-- Troll Popup -->
+    <div id="trollPopup" class="troll-popup">
+        <div class="troll-popup-container">
+            <div class="troll-popup-content">
+                <img src="../files/output-onlinepngtools.png" class="troll-popup-img" alt="You've been fooled">
+                
+                <!-- Video wrapper with unmute button -->
+                <div class="troll-video-wrapper">
+                    <video id="trollVideo" class="troll-popup-video" muted loop playsinline>
+                        <source src="../files/Cat Laughing At You - SevTube (360p, h264, youtube).mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <button id="trollUnmuteBtn" class="troll-unmute-overlay">
+                        <span class="troll-unmute-icon">🔊</span>
+                        <span class="troll-unmute-text">TAP FOR SOUND</span>
+                    </button>
+                </div>
+                
+                <h2 class="troll-popup-text">Sike!!! You really thought that was for the tickets??</h2>
+                <div class="troll-button-container">
+                    <button class="troll-btn troll-btn-secondary" onclick="closeTrollPopup()">Go Back</button>
+                    <button class="troll-btn troll-btn-primary" onclick="showSecondPopup()">Press Here</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Troll Popup (No buttons, auto-redirect) -->
+    <div id="secondTrollPopup" class="troll-popup">
+        <div class="troll-popup-container second-popup-container">
+            <div class="troll-popup-content">
+                <img src="../files/output-onlinepngtools2.png" class="troll-popup-img" alt="Gotcha again!">
+                
+                <!-- Smaller Video wrapper -->
+                <div class="troll-video-wrapper small-video">
+                    <video id="secondTrollVideo" class="troll-popup-video" muted loop playsinline>
+                        <source src="../files/okxG10iISSjG4QAg0CLKAeXGgkSe1CxWe34IMF.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <button id="secondTrollUnmuteBtn" class="troll-unmute-overlay small-unmute">
+                        <span class="troll-unmute-icon">🔊</span>
+                        <span class="troll-unmute-text">TAP FOR SOUND</span>
+                    </button>
+                </div>
+                
+                <h2 class="troll-popup-text">Sorry babe ... a real surprise in  <span id="countdown">5</span></h2>
+                
+                <!-- Cute loading animation with hearts -->
+                <div class="cute-loading">
+                    <div class="hearts-container">
+                        <span class="heart heart-1">💖</span>
+                        <span class="heart heart-2">💕</span>
+                        <span class="heart heart-3">💗</span>
+                    </div>
+                    <div class="troll-countdown">Taking you somewhere special ...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Troll Popup Script -->
+    <script>
+        let trollPopupShown = false;
+
+        function openTrollPopup(event) {
+            if (trollPopupShown) return;
+            trollPopupShown = true;
+
+            // Prevent default navigation
+            event.preventDefault();
+            
+            const popup = document.getElementById("trollPopup");
+            const video = document.getElementById("trollVideo");
+            const unmuteBtn = document.getElementById("trollUnmuteBtn");
+            
+            // Show popup
+            popup.classList.add("troll-popup-open");
+            
+            // Play video (muted initially - required by browsers)
+            setTimeout(function() {
+                video.play().catch(err => console.log("Play error:", err));
+            }, 300);
+            
+            // Unmute button handler
+            unmuteBtn.addEventListener('click', function() {
+                video.muted = false;
+                video.volume = 1.0;
+                unmuteBtn.style.display = 'none';
+                if (video.paused) {
+                    video.play();
+                }
+            });
+            
+            // Also allow clicking video to unmute
+            video.addEventListener('click', function() {
+                if (video.muted) {
+                    video.muted = false;
+                    video.volume = 1.0;
+                    unmuteBtn.style.display = 'none';
+                }
+            });
+        }
+
+        function closeTrollPopup() {
+            const popup = document.getElementById("trollPopup");
+            const video = document.getElementById("trollVideo");
+            popup.classList.remove("troll-popup-open");
+            video.pause();
+            video.currentTime = 0;
+            trollPopupShown = false;
+        }
+
+        function showSecondPopup() {
+            // Close first popup
+            const firstPopup = document.getElementById("trollPopup");
+            const firstVideo = document.getElementById("trollVideo");
+            firstPopup.classList.remove("troll-popup-open");
+            firstVideo.pause();
+            firstVideo.currentTime = 0;
+            
+            // Show second popup
+            const secondPopup = document.getElementById("secondTrollPopup");
+            const secondVideo = document.getElementById("secondTrollVideo");
+            const secondUnmuteBtn = document.getElementById("secondTrollUnmuteBtn");
+            
+            secondPopup.classList.add("troll-popup-open");
+            
+            // Play video
+            setTimeout(function() {
+                secondVideo.play().catch(err => console.log("Play error:", err));
+            }, 300);
+            
+            // Unmute button handler
+            secondUnmuteBtn.addEventListener('click', function() {
+                secondVideo.muted = false;
+                secondVideo.volume = 1.0;
+                secondUnmuteBtn.style.display = 'none';
+                if (secondVideo.paused) {
+                    secondVideo.play();
+                }
+            });
+            
+            // Also allow clicking video to unmute
+            secondVideo.addEventListener('click', function() {
+                if (secondVideo.muted) {
+                    secondVideo.muted = false;
+                    secondVideo.volume = 1.0;
+                    secondUnmuteBtn.style.display = 'none';
+                }
+            });
+            
+            // Countdown and redirect
+            let countdown = 5;
+            const countdownElement = document.getElementById("countdown");
+            
+            const countdownInterval = setInterval(function() {
+                countdown--;
+                countdownElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = "./val.html";
+                }
+            }, 1000);
+        }
+
+        // Intercept all clicks on links and buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all links and buttons
+            const allLinks = document.querySelectorAll('a[href]');
+            const allButtons = document.querySelectorAll('button[type="submit"], button:not(.troll-btn):not(.search__close-btn):not(.close-btn):not(#trollUnmuteBtn)');
+            
+            // Add click interceptor to all links
+            allLinks.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    // Only intercept if not already shown
+                    if (!trollPopupShown) {
+                        openTrollPopup(e);
+                    }
+                });
+            });
+            
+            // Add click interceptor to all buttons
+            allButtons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    // Only intercept if not already shown
+                    if (!trollPopupShown) {
+                        openTrollPopup(e);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <style>
+        /* Troll Popup Overlay Styles */
+        .troll-popup {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: rgba(0, 0, 0, 0.3) !important;
+            z-index: 999999 !important;
+            display: none !important;
+            justify-content: center !important;
+            align-items: center !important;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .troll-popup-open {
+            display: flex !important;
+            opacity: 1 !important;
+        }
+
+        .troll-popup-container {
+            background: #ffffff;
+            padding: 80px 20px 20px 20px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            text-align: center;
+            max-width: 90%;
+            width: 600px;
+            max-height: 95vh;
+            overflow-y: visible;
+            animation: trollZoomIn 0.5s ease-out;
+            position: relative;
+        }
+
+        @keyframes trollZoomIn {
+            from {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .troll-popup-img {
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .troll-video-wrapper {
+            position: relative;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .troll-popup-video {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            display: block;
+            background: #000;
+        }
+
+        .troll-unmute-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.85);
+            border: 3px solid #fff;
+            padding: 20px 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .troll-unmute-overlay:hover {
+            background: rgba(0, 0, 0, 0.95);
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        .troll-unmute-overlay:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+
+        .troll-unmute-icon {
+            font-size: 48px;
+            animation: trollPulse 1.5s infinite;
+        }
+
+        .troll-unmute-text {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        @keyframes trollPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .troll-popup-text {
+            color: #d32f2f;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 15px 0 10px 0;
+            line-height: 1.4;
+        }
+
+        .troll-button-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .troll-btn {
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .troll-btn-primary {
+            background: #4CAF50;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .troll-btn-primary:hover {
+            background: #45a049;
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .troll-btn-secondary {
+            background: #757575;
+            box-shadow: 0 4px 15px rgba(117, 117, 117, 0.3);
+        }
+
+        .troll-btn-secondary:hover {
+            background: #616161;
+            box-shadow: 0 6px 20px rgba(117, 117, 117, 0.4);
+        }
+
+        .troll-btn:active {
+            transform: scale(0.95);
+        }
+
+        .troll-countdown {
+            color: #d32f2f;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 15px;
+            animation: trollPulse 1.5s infinite;
+        }
+
+        .troll-countdown span {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* Smaller video for second popup */
+        .small-video {
+            max-width: 400px;
+            margin: 10px auto;
+        }
+
+        .small-video .troll-popup-video {
+            border-radius: 12px;
+            width: 50%;
+            max-width: 50%;
+            /*center the video*/
+            display: block;
+            margin: 0 auto;
+        }
+
+        .small-unmute {
+            padding: 15px 25px;
+        }
+
+        .small-unmute .troll-unmute-icon {
+            font-size: 36px;
+        }
+
+        .small-unmute .troll-unmute-text {
+            font-size: 14px;
+        }
+
+        /* Cute loading animation */
+        .cute-loading {
+            margin-top: 20px;
+        }
+
+        .hearts-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .heart {
+            font-size: 32px;
+            display: inline-block;
+            animation: heartBounce 1.2s ease-in-out infinite;
+        }
+
+        .heart-1 {
+            animation-delay: 0s;
+        }
+
+        .heart-2 {
+            animation-delay: 0.2s;
+        }
+
+        .heart-3 {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes heartBounce {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            25% {
+                transform: translateY(-15px) scale(1.1);
+            }
+            50% {
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Second popup specific styling */
+        .second-popup-container {
+            max-width: 500px;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .troll-popup-container {
+                width: 95%;
+                padding: 70px 15px 15px 15px;
+                max-height: 90vh;
+            }
+            
+            .troll-popup-img {
+                width: 150px;
+                height: 150px;
+                top: -75px;
+            }
+            
+            .troll-popup-text {
+                font-size: 20px;
+            }
+
+            .troll-button-container {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+            
+            .troll-btn {
+                padding: 12px 30px;
+                font-size: 16px;
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .troll-countdown {
+                font-size: 16px;
+            }
+
+            .troll-countdown span {
+                font-size: 20px;
+            }
+
+            .small-video {
+                max-width: 100%;
+            }
+
+            .heart {
+                font-size: 28px;
+            }
+            
+            .troll-unmute-overlay {
+                padding: 15px 25px;
+            }
+            
+            .troll-unmute-icon {
+                font-size: 40px;
+            }
+            
+            .troll-unmute-text {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .troll-popup-container {
+                width: 98%;
+                padding: 60px 12px 12px 12px;
+                border-radius: 15px;
+            }
+            
+            .troll-popup-img {
+                width: 120px;
+                height: 120px;
+                top: -60px;
+            }
+            
+            .troll-popup-text {
+                font-size: 18px;
+                margin: 10px 0;
+            }
+            
+            .troll-btn {
+                padding: 10px 25px;
+                font-size: 14px;
+            }
+            
+            .troll-popup-video {
+                border-radius: 10px;
+            }
+
+            .heart {
+                font-size: 24px;
+            }
+
+            .hearts-container {
+                gap: 10px;
+            }
+            
+            .troll-unmute-overlay {
+                padding: 12px 20px;
+            }
+            
+            .troll-unmute-icon {
+                font-size: 36px;
+            }
+            
+            .troll-unmute-text {
+                font-size: 12px;
+            }
+
+            .small-unmute .troll-unmute-icon {
+                font-size: 32px;
+            }
+
+            .small-unmute .troll-unmute-text {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-height: 600px) and (orientation: landscape) {
+            .troll-popup-container {
+                max-height: 95vh;
+                padding: 50px 10px 10px 10px;
+                overflow-y: auto;
+            }
+            
+            .troll-popup-img {
+                width: 100px;
+                height: 100px;
+                top: -50px;
+            }
+            
+            .troll-popup-text {
+                font-size: 16px;
+                margin: 8px 0;
+            }
+
+            .heart {
+                font-size: 20px;
+            }
+
+            .small-video {
+                max-width: 300px;
+            }
+        }
+    </style>
