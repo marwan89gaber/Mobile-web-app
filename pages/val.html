@@ -20,16 +20,8 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            overflow-x: hidden;
-            max-width: 100vw;
-            position: relative;
         }
-
-        html {
-            overflow-x: hidden;
-            max-width: 100vw;
-        }
-                
+        
         .container {
             display: flex;
             flex-direction: column;
@@ -180,7 +172,7 @@
         }
         
         .buttons-container {
-            display: none; /* Hidden initially - will show on last slide */
+            display: none;
             gap: 15px;
             justify-content: center;
             align-items: center;
@@ -266,7 +258,6 @@
             animation: float 4s ease-in-out infinite;
             opacity: 0;
             pointer-events: none;
-            max-width: 100vw;
         }
         
         @keyframes float {
@@ -321,12 +312,14 @@
             .buttons-container {
                 gap: 10px;
             }
+
             
             #noButton {
                 max-width: 120px;
                 width: 120px;
                 min-height: 60px;
             }
+
         }
         
         @media (max-width: 400px) {
@@ -349,6 +342,7 @@
                 width: 100px;
                 min-height: 50px;
             }
+
         }
 
         /* Cute Kiss Popup Styles */
@@ -507,77 +501,17 @@
             transform: translateY(0);
         }
 
-        /* Kiss stages */
-        .kiss-stage {
-            width: 100%;
-        }
-
-        .kiss-image.red-1 {
-            filter: saturate(170%) brightness(1.08) contrast(1.12) hue-rotate(-8deg) opacity(0.98);
-        }
-
-        .kiss-image.red-2 {
-            filter: saturate(230%) brightness(1.12) contrast(1.18) hue-rotate(-12deg);
-        }
-
-        .kiss-image.red-3 {
-            filter: saturate(300%) brightness(1.15) contrast(1.22) hue-rotate(-18deg);
-        }
-
-        .kiss-image.red-4 {
-            filter: saturate(380%) brightness(1.18) contrast(1.28) hue-rotate(-22deg);
-        }
-
-        /* "Enough!" stage */
-        .enough-text {
-            font-size: clamp(40px, 15vw, 80px);
-            color: #ff1493;
-            font-weight: bold;
-            text-shadow: 4px 4px 8px rgba(255, 20, 147, 0.3);
-            margin: 100px 0;
-            animation: shake 0.5s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-20px) rotate(-5deg); }
-            75% { transform: translateX(20px) rotate(5deg); }
-        }
-
-        /* Final love message */
-        .final-message {
-            font-size: clamp(24px, 5vw, 36px);
-            color: #ff1493;
-            font-weight: bold;
-            line-height: 1.6;
-            margin-top: 25px;
-            text-shadow: 2px 2px 4px rgba(255, 20, 147, 0.2);
-            animation: fadeInScale 1s ease-out;
-        }
-
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
         /* Mobile styles for kiss popup */
         @media (max-width: 768px) {
             .kiss-popup-content {
                 padding: 30px 20px;
-                width: 85%;
+                width: 95%;
                 border-width: 3px;
-                max-width: 85%;
             }
 
             .kiss-image {
-                width: 180px;
-                height: 2180px;
+                width: 200px;
+                height: 200px;
             }
 
             .sparkle {
@@ -593,23 +527,16 @@
             .kiss-popup-content {
                 padding: 25px 15px;
                 border-radius: 20px;
-                width: 90%;
-                max-width: 90%;
             }
 
             .kiss-image {
-                width: 150px;
-                height: 150px;
+                width: 180px;
+                height: 180px;
                 border-width: 3px;
             }
 
             .sparkle {
                 font-size: 20px;
-            }
-
-            .kiss-close-btn {
-                padding: 12px 30px;
-                font-size: clamp(14px, 2.5vw, 18px);
             }
         }
     </style>
@@ -679,39 +606,21 @@
     <div id="kissPopup" class="kiss-popup hidden">
         <div class="kiss-popup-overlay"></div>
         <div class="kiss-popup-content">
-            <!-- Stage 1-4: Normal kiss stages -->
-            <div id="kissStageNormal" class="kiss-stage">
-                <div class="kiss-popup-sparkles">
-                    <span class="sparkle">✨</span>
-                    <span class="sparkle">💫</span>
-                    <span class="sparkle">✨</span>
-                    <span class="sparkle">💫</span>
-                    <span class="sparkle">✨</span>
-                </div>
-                <img id="kissImage" src="../files/From KlickPin CF kissing cat 😽 🥺 _ Cute cat gif Cat memes Cute cats.gif" alt="Kissing cats" class="kiss-image">
-                <div class="kiss-message">
-                    <h2 id="kissTitle" class="kiss-title">Now you owe me a kiss! 💋</h2>
-                    <p id="kissSubtitle" class="kiss-subtitle">Not infront of your mom ofc ... I'll be waiting 👀</p>
-                </div>
-                <button class="kiss-close-btn" onclick="handleKissClick()">
-                    Kiss Me 💕
-                </button>
+            <div class="kiss-popup-sparkles">
+                <span class="sparkle">✨</span>
+                <span class="sparkle">💫</span>
+                <span class="sparkle">✨</span>
+                <span class="sparkle">💫</span>
+                <span class="sparkle">✨</span>
             </div>
-
-            <!-- Stage 5: "Enough!" message -->
-            <div id="kissStageEnough" class="kiss-stage hidden">
-                <h1 class="enough-text">ENOUGH!</h1>
+            <img src="../files/From KlickPin CF kissing cat 😽 🥺 _ Cute cat gif Cat memes Cute cats.gif" alt="Kissing cats" class="kiss-image">
+            <div class="kiss-message">
+                <h2 class="kiss-title">Now you owe me a kiss! 💋</h2>
+                <p class="kiss-subtitle">Not infront of your mom ofc ... 👀</p>
             </div>
-
-            <!-- Stage 6: Final love message -->
-            <div id="kissStageFinal" class="kiss-stage hidden">
-                <img src="../files/SnapInsta.to_587799125_18072913271613103_3447294319330530188_n.jpg" alt="Lovely cat" class="kiss-image">
-                <h2 class="final-message">
-                    Just kidding!<br>
-                    I love you ❤️<br>
-                    and I never get enough of you! 💕
-                </h2>
-            </div>
+            <button class="kiss-close-btn" onclick="closeKissPopup()">
+                Got it! 💕
+            </button>
         </div>
     </div>
 
@@ -744,6 +653,7 @@
         const initialView = document.getElementById('initialView');
         const successView = document.getElementById('successView');
         const successVideo = document.getElementById('successVideo');
+        const question = document.getElementById('question');
         const arrowLeft = document.getElementById('arrowLeft');
         const arrowRight = document.getElementById('arrowRight');
         const knowItMessage = document.getElementById('knowItMessage');
@@ -815,9 +725,9 @@
             if (currentSlide === totalSlides - 1) {
                 buttonsContainer.style.display = 'flex';
                 question.classList.add('hidden');
-            } 
-        }
+            }
 
+        }
 
         // Change slide
         function changeSlide(direction) {
@@ -952,88 +862,9 @@
             kissPopup.classList.remove('hidden');
         }
 
-        let kissCount = 0;
-
-        function handleKissClick() {
-            kissCount++;
-            
-            const kissImage = document.getElementById('kissImage');
-            const kissTitle = document.getElementById('kissTitle');
-            const kissSubtitle = document.getElementById('kissSubtitle');
-            
-            if (kissCount === 1) {
-                // First kiss - change to kissed cat
-                kissImage.src = '../files/2e09f3f03e489ccb41ed3f3950e98f8b.jpg';
-                kissTitle.textContent = 'Me when you kiss me 😊';
-                kissSubtitle.textContent = 'Again... please? 🥺';
-                
-            } else if (kissCount === 2) {
-                // Second kiss - more red
-                kissImage.classList.add('red-1');
-                kissTitle.textContent = 'Kiss me again! 💋';
-                kissSubtitle.textContent = 'More more more! 😍';
-                
-            } else if (kissCount === 3) {
-                // Third kiss - even more red
-                kissImage.classList.remove('red-1');
-                kissImage.classList.add('red-2');
-                kissTitle.textContent = 'Kiss me again!! 💕💕';
-                kissSubtitle.textContent = 'I can\'t get enough! 🥰';
-                
-            } else if (kissCount === 4) {
-                // Fourth kiss - very red
-                kissImage.classList.remove('red-2');
-                kissImage.classList.add('red-3');
-                kissTitle.textContent = 'KISS ME AGAIN!!! 💖💖💖';
-                kissSubtitle.textContent = 'One more time! 😘😘😘';
-                
-            } else if (kissCount === 5) {
-                // Fifth kiss - show "ENOUGH!" then final message
-                const stageNormal = document.getElementById('kissStageNormal');
-                const stageEnough = document.getElementById('kissStageEnough');
-                const stageFinal = document.getElementById('kissStageFinal');
-                
-                // Hide normal stage, show "ENOUGH!"
-                stageNormal.classList.add('hidden');
-                stageEnough.classList.remove('hidden');
-                
-                // After 2 seconds, show final love message
-                setTimeout(() => {
-                    stageEnough.classList.add('hidden');
-                    stageFinal.classList.remove('hidden');
-                    
-                    // After 5 seconds, close popup
-                    setTimeout(() => {
-                        closeKissPopup();
-                    }, 5000);
-                }, 2000);
-            }
-        }
-
         function closeKissPopup() {
             const kissPopup = document.getElementById('kissPopup');
             kissPopup.classList.add('hidden');
-            
-            // Reset for next time
-            setTimeout(() => {
-                kissCount = 0;
-                const kissImage = document.getElementById('kissImage');
-                const kissTitle = document.getElementById('kissTitle');
-                const kissSubtitle = document.getElementById('kissSubtitle');
-                const stageNormal = document.getElementById('kissStageNormal');
-                const stageEnough = document.getElementById('kissStageEnough');
-                const stageFinal = document.getElementById('kissStageFinal');
-                
-                // Reset to initial state
-                kissImage.src = '../files/cat-kiss.gif';
-                kissImage.className = 'kiss-image';
-                kissTitle.textContent = 'Now you owe me a kiss! 💋';
-                kissSubtitle.textContent = 'I\'ll be waiting... 😘';
-                
-                stageNormal.classList.remove('hidden');
-                stageEnough.classList.add('hidden');
-                stageFinal.classList.add('hidden');
-            }, 500);
         }
 
         function handleNo() {
@@ -1041,7 +872,7 @@
             
             const clicks = Math.min(noClicks, 10);
             
-            if (noClicks >= 10) {
+            if (noClicks >= 11) {
                 noButton.style.display = 'none';
                 
                 const finalYesSize = isMobile ? 250 : 400;
@@ -1072,7 +903,7 @@
                         const heart = document.createElement('div');
                         heart.className = 'heart';
                         heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-                        heart.style.left = Math.random() * 90 + 5 + 'vw';
+                        heart.style.left = Math.random() * 100 + 'vw';
                         heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
                         heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
                         heart.style.animationDelay = Math.random() * 0.5 + 's';
