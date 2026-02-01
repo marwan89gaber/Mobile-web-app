@@ -137,8 +137,8 @@
         
         /* Success Video */
         .success-video-container {
-            width: 100%;
-            max-width: 500px;
+            width: 80%;
+            max-width: 400px;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -181,7 +181,7 @@
         }
         
         button {
-            padding: 15px 30px;
+            padding: 15px 20px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
@@ -189,7 +189,11 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             font-family: Arial, sans-serif;
-            white-space: nowrap;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            text-align: center;
+            line-height: 1.2;
         }
         
         button:hover {
@@ -297,7 +301,7 @@
             }
             
             button {
-                padding: 12px 20px;
+                padding: 10px 12px;
             }
             
             .buttons-container {
@@ -317,7 +321,7 @@
             }
             
             button {
-                padding: 10px 15px;
+                padding: 8px 10px;
             }
         }
     </style>
@@ -359,6 +363,10 @@
             </div>
             
             <h1 id="question">Swipe Right ➡️</h1>
+            
+            <div id="knowItMessage" class="hidden" style="font-size: clamp(20px, 4vw, 36px); color: #ff1493; font-weight: bold; margin-bottom: 30px; animation: slideDown 0.6s ease-out;">
+                I knew you were going to press yes 💕
+            </div>
             
             <div id="buttonsContainer" class="buttons-container">
                 <button id="yesButton" onclick="handleYes()">Yes</button>
@@ -410,6 +418,7 @@
         const successVideo = document.getElementById('successVideo');
         const arrowLeft = document.getElementById('arrowLeft');
         const arrowRight = document.getElementById('arrowRight');
+        const knowItMessage = document.getElementById('knowItMessage');
         
         const totalSlides = document.querySelectorAll('.gallery-slide').length;
 
@@ -471,10 +480,23 @@
         
         // Update arrow visibility
         function updateArrows() {
-            // Hide left arrow on first slide
-            arrowLeft.classList.toggle('hidden', currentSlide === 0);
-            // Hide right arrow on last slide
-            arrowRight.classList.toggle('hidden', currentSlide === totalSlides - 1);
+            // 1st image (index 0): only right arrow
+            // 2nd, 3rd, 4th images (indices 1, 2, 3): both arrows
+            // 5th image (index 4): only left arrow
+            
+            if (currentSlide === 0) {
+                // First slide: show only right arrow
+                arrowLeft.classList.add('hidden');
+                arrowRight.classList.remove('hidden');
+            } else if (currentSlide === totalSlides - 1) {
+                // Last slide: show only left arrow
+                arrowLeft.classList.remove('hidden');
+                arrowRight.classList.add('hidden');
+            } else {
+                // Middle slides: show both arrows
+                arrowLeft.classList.remove('hidden');
+                arrowRight.classList.remove('hidden');
+            }
         }
 
         // Change slide
@@ -607,16 +629,30 @@
             // Cap at 10 clicks for the optimization problem
             const clicks = Math.min(noClicks, 10);
             
-            // Calculate new button sizes using optimization equations
-            const yesSize = calculateButtonSize(clicks, true);
-            const noSize = calculateButtonSize(clicks, false);
-            
-            yesButton.style.fontSize = `${yesSize}px`;
-            noButton.style.fontSize = `${noSize}px`;
-            
-            // Change the No button text
-            const phraseIndex = Math.min(noClicks - 1, NO_PHRASES.length - 1);
-            noButton.textContent = NO_PHRASES[phraseIndex];
+            if (noClicks >= 10) {
+                // On 10th click: hide No button, make Yes button huge, show message
+                noButton.style.display = 'none';
+                
+                // Make Yes button even bigger
+                const finalYesSize = isMobile ? 250 : 400;
+                yesButton.style.fontSize = `${finalYesSize}px`;
+                
+                // Show the message
+                knowItMessage.classList.remove('hidden');
+                
+            } else {
+                // Normal progression (clicks 1-9)
+                // Calculate new button sizes using optimization equations
+                const yesSize = calculateButtonSize(clicks, true);
+                const noSize = calculateButtonSize(clicks, false);
+                
+                yesButton.style.fontSize = `${yesSize}px`;
+                noButton.style.fontSize = `${noSize}px`;
+                
+                // Change the No button text
+                const phraseIndex = Math.min(noClicks - 1, NO_PHRASES.length - 1);
+                noButton.textContent = NO_PHRASES[phraseIndex];
+            }
         }
 
         // Create floating hearts animation with increasing count

@@ -96,6 +96,10 @@
         .gallery-arrow:active {
             transform: translateY(-50%) scale(0.95);
         }
+
+        .gallery-arrow.hidden {
+            display: none;
+        }
         
         .arrow-left {
             left: 10px;
@@ -169,15 +173,15 @@
         
         .buttons-container {
             display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
+            gap: 15px;
             justify-content: center;
             align-items: center;
+            width: 100%;
+            max-width: 500px;
         }
         
         button {
-            font-size: 16px;
-            padding: 15px 30px;
+            padding: 15px 20px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
@@ -185,6 +189,11 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             font-family: Arial, sans-serif;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            text-align: center;
+            line-height: 1.2;
         }
         
         button:hover {
@@ -199,7 +208,8 @@
         #yesButton {
             background: linear-gradient(135deg, #00c853 0%, #00e676 100%);
             color: white;
-            transition: all 0.3s ease;
+            font-size: 100px;
+            flex-shrink: 0;
         }
         
         #yesButton:hover {
@@ -209,6 +219,9 @@
         #noButton {
             background: linear-gradient(135deg, #ff1744 0%, #ff5252 100%);
             color: white;
+            font-size: 100px; 
+            flex-shrink: 1;
+            min-width: 0;
         }
         
         #noButton:hover {
@@ -239,6 +252,7 @@
             font-size: 30px;
             animation: float 4s ease-in-out infinite;
             opacity: 0;
+            pointer-events: none;
         }
         
         @keyframes float {
@@ -287,12 +301,11 @@
             }
             
             button {
-                padding: 12px 25px;
-                font-size: 14px;
+                padding: 10px 12px;
             }
             
             .buttons-container {
-                gap: 15px;
+                gap: 10px;
             }
         }
         
@@ -308,8 +321,7 @@
             }
             
             button {
-                padding: 10px 20px;
-                font-size: 13px;
+                padding: 8px 10px;
             }
         }
     </style>
@@ -339,10 +351,10 @@
                 </div>
                 
                 <!-- Navigation Arrows -->
-                <button class="gallery-arrow arrow-left" onclick="changeSlide(-1)">
+                <button class="gallery-arrow arrow-left" id="arrowLeft" onclick="changeSlide(-1)">
                     &#10094;
                 </button>
-                <button class="gallery-arrow arrow-right" onclick="changeSlide(1)">
+                <button class="gallery-arrow arrow-right" id="arrowRight" onclick="changeSlide(1)">
                     &#10095;
                 </button>
                 
@@ -350,7 +362,7 @@
                 <div class="gallery-dots" id="dotsContainer"></div>
             </div>
             
-            <h1 id="question">Will you be my Valentine? 💘</h1>
+            <h1 id="question">Swipe Right ➡️</h1>
             
             <div id="buttonsContainer" class="buttons-container">
                 <button id="yesButton" onclick="handleYes()">Yes</button>
@@ -374,12 +386,15 @@
     <script>
         const NO_PHRASES = [
             "No 💔",
-            "Pretty please? 🥺",
-            "But we'd be so cute together! 💕",
-            "One more chance, pookie?",
+            "Sweetie please? 🥺",
+            "But we're so cute together! 💕",
+            "One more chance, cutie?",
             "Don't break my heart :(",
             "What about a maybe?",
-            "Please don't do this to me, I'm fragile",
+            "I'm begging you... 😢",
+            "Last chance! 🙏",
+            "Really? Still no? 😭",
+            "Okay, now press yes ... please! 🥺"
         ];
 
         let noClicks = 0;
@@ -387,6 +402,8 @@
         let isValentine = false;
         let touchStartX = 0;
         let touchEndX = 0;
+        let heartInterval = null;
+        let heartCount = 1; 
 
         const yesButton = document.getElementById('yesButton');
         const noButton = document.getElementById('noButton');
@@ -395,8 +412,34 @@
         const initialView = document.getElementById('initialView');
         const successView = document.getElementById('successView');
         const successVideo = document.getElementById('successVideo');
-        
+        const arrowLeft = document.getElementById('arrowLeft');
+        const arrowRight = document.getElementById('arrowRight');
+        const knowItMessage = document.getElementById('knowItMessage');
         const totalSlides = document.querySelectorAll('.gallery-slide').length;
+        const isMobile = window.innerWidth <= 768;
+
+        function calculateButtonSize(clicks, isYesButton) {
+            if (isMobile) {
+                if (isYesButton) {
+                    return 12 * clicks + 60; 
+                } else {
+                    return Math.max(8, -5.2 * clicks + 60); 
+                }
+            } else {
+                if (isYesButton) {
+                    return 20 * clicks + 100; 
+                } else {
+                    return Math.max(10, -9 * clicks + 100); 
+                }
+            }
+        }
+
+        // Set initial button sizes
+        function setInitialButtonSizes() {
+            const initialSize = isMobile ? 60 : 100;
+            yesButton.style.fontSize = `${initialSize}px`;
+            noButton.style.fontSize = `${initialSize}px`;
+        }
 
         // Initialize dots
         function initDots() {
@@ -416,16 +459,33 @@
                 dot.classList.toggle('active', index === currentSlide);
             });
         }
+        
+        // Update arrow visibility
+        function updateArrows() {            
+            if (currentSlide === 0) {
+                arrowLeft.classList.add('hidden');
+                arrowRight.classList.remove('hidden');
+            } else if (currentSlide === totalSlides - 1) {
+                arrowLeft.classList.remove('hidden');
+                arrowRight.classList.add('hidden');
+            } else {
+                arrowLeft.classList.remove('hidden');
+                arrowRight.classList.remove('hidden');
+            }
+        }
+
 
         // Change slide
         function changeSlide(direction) {
             currentSlide += direction;
             
-            // Loop around
+            // Prevent going beyond bounds
             if (currentSlide < 0) {
-                currentSlide = totalSlides - 1;
-            } else if (currentSlide >= totalSlides) {
                 currentSlide = 0;
+                return;
+            } else if (currentSlide >= totalSlides) {
+                currentSlide = totalSlides - 1;
+                return;
             }
             
             updateGallery();
@@ -442,6 +502,7 @@
             const offset = -currentSlide * 100;
             galleryWrapper.style.transform = `translateX(${offset}%)`;
             updateDots();
+            updateArrows();
         }
 
         // Touch/Swipe functionality
@@ -523,6 +584,9 @@
             if (isValentine) return;
             
             isValentine = true;
+
+            // Start heart animation
+            createFloatingHearts();
             
             // Hide initial view
             initialView.classList.add('hidden');
@@ -534,54 +598,69 @@
             // Unmute and play video
             successVideo.muted = false;
             successVideo.play();
-            
-            // Create floating hearts
-            createFloatingHearts();
         }
 
         function handleNo() {
             noClicks++;
             
-            // Increase the Yes button size
-            const newSize = Math.min((noClicks * 20) + 16, 276);
-            const newNoSize = Math.max(26 - noClicks * 2, 10);
-            yesButton.style.fontSize = `${newSize}px`;
-            noButton.style.fontSize = `${newNoSize}px`;
+            const clicks = Math.min(noClicks, 10);
             
-            // Change the No button text
-            const phraseIndex = Math.min(noClicks - 1, NO_PHRASES.length - 1);
-            noButton.textContent = NO_PHRASES[phraseIndex];
-            
-            // Add shake animation to No button
-            noButton.style.animation = 'shake 0.5s';
-            noButton.addEventListener('animationend', () => {
-                noButton.style.animation = '';
-            }, { once: true });
+            if (noClicks >= 10) {
+                noButton.style.display = 'none';
+                
+                const finalYesSize = isMobile ? 250 : 400;
+                yesButton.style.fontSize = `${finalYesSize}px`;
+                
+                knowItMessage.classList.remove('hidden');
+                
+            } else {
+                const yesSize = calculateButtonSize(clicks, true);
+                const noSize = calculateButtonSize(clicks, false);
+                
+                yesButton.style.fontSize = `${yesSize}px`;
+                noButton.style.fontSize = `${noSize}px`;
+                
+                const phraseIndex = Math.min(noClicks - 1, NO_PHRASES.length - 1);
+                noButton.textContent = NO_PHRASES[phraseIndex];
+            }
         }
 
         // Create floating hearts animation
         function createFloatingHearts() {
             const hearts = ['❤️', '💕', '💖', '💗', '💓', '💝', '💘'];
             
-            setInterval(() => {
-                const heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
-                heart.style.animationDelay = Math.random() * 2 + 's';
+            heartInterval = setInterval(() => {
+                // Create multiple hearts based on heartCount
+                for (let i = 0; i < heartCount; i++) {
+                    setTimeout(() => {
+                        const heart = document.createElement('div');
+                        heart.className = 'heart';
+                        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                        heart.style.left = Math.random() * 100 + 'vw';
+                        heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                        heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                        heart.style.animationDelay = Math.random() * 0.5 + 's';
+                        
+                        document.body.appendChild(heart);
+                        
+                        // Remove heart after animation
+                        setTimeout(() => {
+                            heart.remove();
+                        }, 6000);
+                    }, i * 100); // Stagger the creation slightly
+                }
                 
-                document.body.appendChild(heart);
-                
-                // Remove heart after animation
-                setTimeout(() => {
-                    heart.remove();
-                }, 6000);
-            }, 300);
+                // Increase heart count every interval up to a max of 10
+                if (heartCount < 10) {
+                    heartCount++;
+                }
+            }, 500);
         }
 
         // Initialize
+        setInitialButtonSizes();
         initDots();
+        updateArrows();
         galleryWrapper.style.cursor = 'grab';
 
     </script>
