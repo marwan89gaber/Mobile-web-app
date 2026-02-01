@@ -1,0 +1,72 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.container {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #a8cbff;
+}  
+
+.btn {
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #fff;
+    background: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease;
+}
+
+.popup {
+    width: 600px;
+    background-color: #bdffd8;
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.01);
+    text-align: center;
+    padding: 30px 30px 30px 30px;
+    color: rgb(163, 27, 50);
+    visibility: hidden;
+    transition: transform 0.4s ease-in-out, top 0.4s ease-in-out;
+}
+
+.popup-open {
+    visibility: visible;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    transition: transform 0.3s ease-in-out , top 0.3s ease-in-out;
+}
+
+.popup img {
+    width: auto;
+    margin-top: -150px;
+    margin-bottom: 1%;
+}
+
+.popup video {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    display: block;
+    margin: 10px auto;
+    background: #000;
+}
+
+.popup h2 {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
