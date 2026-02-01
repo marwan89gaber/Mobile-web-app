@@ -1,82 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>testing pop up</title>
-    <link rel="stylesheet" href="style.css">
+    <title>My Mobile Site</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+    </style>
 </head>
 <body>
-    
-    <div class="container">
-        <button type="submit" class="btn" onclick="openPopup()">Click Me</button>
-        <div id="popup" class="popup">
-            <img src="./files/output-onlinepngtools.png" alt="You've been fooled">
-            
-            <!-- Video wrapper with unmute button -->
-            <div class="video-wrapper">
-                <video id="troll" muted loop playsinline>
-                    <source src="./files/Cat Laughing At You - SevTube (360p, h264, youtube).mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <button id="unmuteBtn" class="unmute-overlay">
-                    <span class="unmute-icon">🔊</span>
-                    <span class="unmute-text">TAP FOR SOUND</span>
-                </button>
-            </div>
-            
-            <h2>Sike!!! You really thought that was for the tickets??</h2>
-            <button class="btn" onclick="transtoval()">press me now</button>
-        </div>    
-    </div>
-
+    <!--div class="container">
+        <h1>Hello from my Phone!</h1>
+        <p>This website is hosted from my mobile device.</p>
+    </div-->
+    <!-- redirect to the other page -->
     <script>
-        let isPopupOpen = false;
-        
-        function openPopup() {
-            if (isPopupOpen) return;
-            isPopupOpen = true;
-            
-            const popup = document.getElementById("popup");
-            const video = document.getElementById("troll");
-            const unmuteBtn = document.getElementById("unmuteBtn");
-            
-            // Show popup
-            popup.classList.add("popup-open");
-            
-            // Play video (muted initially - required by browsers)
-            video.play().catch(err => console.log("Play error:", err));
-            
-            // Unmute button handler
-            unmuteBtn.addEventListener('click', function() {
-                video.muted = false;
-                video.volume = 1.0;
-                unmuteBtn.style.display = 'none';
-                // Replay video if needed
-                if (video.paused) {
-                    video.play();
-                }
-            });
-            
-            // Also allow clicking video to unmute
-            video.addEventListener('click', function() {
-                if (video.muted) {
-                    video.muted = false;
-                    video.volume = 1.0;
-                    unmuteBtn.style.display = 'none';
-                }
-            });
-        }
-        
-        function transtoval() {
-            window.location.href = "../Mobile-web-app/pages/val.html";
-        }
-        
-        // Auto-open popup after 5 seconds
-        setTimeout(function() {
-            openPopup();
-        }, 5000);
+        window.location.href = "pages/ticketres2.html";
     </script>
-
 </body>
 </html>

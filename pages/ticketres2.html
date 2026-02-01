@@ -624,7 +624,34 @@ The Great Hall is equipped with state-of-the-art audio-visual devices providing 
                 </div>
                 
                 <h2 class="troll-popup-text">Sike!!! You really thought that was for the tickets??</h2>
-                <button class="troll-btn" onclick="closeTrollPopup()">Go Back</button>
+                <div class="troll-button-container">
+                    <button class="troll-btn troll-btn-secondary" onclick="closeTrollPopup()">Go Back</button>
+                    <button class="troll-btn troll-btn-primary" onclick="showSecondPopup()">Press Here</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Troll Popup (No buttons, auto-redirect) -->
+    <div id="secondTrollPopup" class="troll-popup">
+        <div class="troll-popup-container">
+            <div class="troll-popup-content">
+                <img src="../files/output-onlinepngtools2.png" class="troll-popup-img" alt="Gotcha again!">
+                
+                <!-- Video wrapper with unmute button -->
+                <div class="troll-video-wrapper">
+                    <video id="secondTrollVideo" class="troll-popup-video" muted loop playsinline>
+                        <source src="../files/okxG10iISSjG4QAg0CLKAeXGgkSe1CxWe34IMF.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <button id="secondTrollUnmuteBtn" class="troll-unmute-overlay">
+                        <span class="troll-unmute-icon">🔊</span>
+                        <span class="troll-unmute-text">TAP FOR SOUND</span>
+                    </button>
+                </div>
+                
+                <h2 class="troll-popup-text">Got you again! Redirecting...</h2>
+                <div class="troll-countdown">Redirecting in <span id="countdown">3</span> seconds...</div>
             </div>
         </div>
     </div>
@@ -679,6 +706,61 @@ The Great Hall is equipped with state-of-the-art audio-visual devices providing 
             video.pause();
             video.currentTime = 0;
             trollPopupShown = false;
+        }
+
+        function showSecondPopup() {
+            // Close first popup
+            const firstPopup = document.getElementById("trollPopup");
+            const firstVideo = document.getElementById("trollVideo");
+            firstPopup.classList.remove("troll-popup-open");
+            firstVideo.pause();
+            firstVideo.currentTime = 0;
+            
+            // Show second popup
+            const secondPopup = document.getElementById("secondTrollPopup");
+            const secondVideo = document.getElementById("secondTrollVideo");
+            const secondUnmuteBtn = document.getElementById("secondTrollUnmuteBtn");
+            
+            secondPopup.classList.add("troll-popup-open");
+            
+            // Play video
+            setTimeout(function() {
+                secondVideo.play().catch(err => console.log("Play error:", err));
+            }, 300);
+            
+            // Unmute button handler
+            secondUnmuteBtn.addEventListener('click', function() {
+                secondVideo.muted = false;
+                secondVideo.volume = 1.0;
+                secondUnmuteBtn.style.display = 'none';
+                if (secondVideo.paused) {
+                    secondVideo.play();
+                }
+            });
+            
+            // Also allow clicking video to unmute
+            secondVideo.addEventListener('click', function() {
+                if (secondVideo.muted) {
+                    secondVideo.muted = false;
+                    secondVideo.volume = 1.0;
+                    secondUnmuteBtn.style.display = 'none';
+                }
+            });
+            
+            // Countdown and redirect
+            let countdown = 5;
+            const countdownElement = document.getElementById("countdown");
+            
+            const countdownInterval = setInterval(function() {
+                countdown--;
+                countdownElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    // CHANGE THIS URL TO YOUR REDIRECT PAGE
+                    window.location.href = "./val.html";
+                }
+            }, 1000);
         }
 
         // Intercept all clicks on links and buttons
@@ -758,9 +840,9 @@ The Great Hall is equipped with state-of-the-art audio-visual devices providing 
 
         .troll-popup-img {
             width: auto;
-            height: 100px;
+            height: auto;
             position: absolute;
-            top: -50px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
             display: block;
@@ -839,28 +921,62 @@ The Great Hall is equipped with state-of-the-art audio-visual devices providing 
             line-height: 1.4;
         }
 
+        .troll-button-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
         .troll-btn {
             padding: 15px 40px;
             font-size: 18px;
             font-weight: 600;
             color: #fff;
-            background: #4CAF50;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
             transition: 0.3s ease;
-            margin-top: 10px;
             text-transform: uppercase;
         }
 
-        .troll-btn:hover {
+        .troll-btn-primary {
+            background: #4CAF50;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .troll-btn-primary:hover {
             background: #45a049;
             box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
         }
 
+        .troll-btn-secondary {
+            background: #757575;
+            box-shadow: 0 4px 15px rgba(117, 117, 117, 0.3);
+        }
+
+        .troll-btn-secondary:hover {
+            background: #616161;
+            box-shadow: 0 6px 20px rgba(117, 117, 117, 0.4);
+        }
+
         .troll-btn:active {
             transform: scale(0.95);
+        }
+
+        .troll-countdown {
+            color: #d32f2f;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 15px;
+            animation: trollPulse 1s infinite;
+        }
+
+        .troll-countdown span {
+            font-size: 24px;
+            font-weight: 700;
         }
 
         /* Mobile optimizations */
@@ -880,10 +996,26 @@ The Great Hall is equipped with state-of-the-art audio-visual devices providing 
             .troll-popup-text {
                 font-size: 20px;
             }
+
+            .troll-button-container {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
             
             .troll-btn {
                 padding: 12px 30px;
                 font-size: 16px;
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .troll-countdown {
+                font-size: 16px;
+            }
+
+            .troll-countdown span {
+                font-size: 20px;
             }
             
             .troll-unmute-overlay {
