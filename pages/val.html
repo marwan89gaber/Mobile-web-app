@@ -3,14 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valentaine</title>
+    <title>Valentine's Day Invitation 💘</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe5f0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .bear-image {
+            width: 300px;
+            height: 300px;
+            max-width: 90vw;
+            max-height: 40vh;
+            object-fit: contain;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        h1 {
+            font-size: clamp(24px, 5vw, 48px);
+            color: #ff1493;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(255, 20, 147, 0.2);
+            animation: slideDown 0.6s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .buttons-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        button {
+            font-size: 16px;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-family: Arial, sans-serif;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #yesButton {
+            background: linear-gradient(135deg, #00c853 0%, #00e676 100%);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        #yesButton:hover {
+            background: linear-gradient(135deg, #00e676 0%, #69f0ae 100%);
+        }
+        
+        #noButton {
+            background: linear-gradient(135deg, #ff1744 0%, #ff5252 100%);
+            color: white;
+        }
+        
+        #noButton:hover {
+            background: linear-gradient(135deg, #ff5252 0%, #ff8a80 100%);
+        }
+        
+        .success-message {
+            font-size: clamp(32px, 8vw, 72px);
+            color: #ff69b4;
+            font-weight: bold;
+            margin-top: 30px;
+            text-shadow: 3px 3px 6px rgba(255, 105, 180, 0.3);
+            animation: bounce 0.6s ease-out;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        
+        /* Floating hearts animation */
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            animation: float 4s ease-in-out infinite;
+            opacity: 0;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .bear-image {
+                width: 250px;
+                height: 250px;
+                margin-bottom: 20px;
+            }
+            
+            h1 {
+                margin-bottom: 30px;
+            }
+            
+            button {
+                padding: 12px 25px;
+                font-size: 14px;
+            }
+            
+            .buttons-container {
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .bear-image {
+                width: 200px;
+                height: 200px;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <img id="bearImage" class="bear-image" src="https://media.tenor.com/VIChDQ6ejRQAAAAj/jumping-bear-hearts-no-png.gif" alt="Cute bear">
+        
+        <h1 id="question">Will you be my Valentine? 💘</h1>
+        
+        <div id="buttonsContainer" class="buttons-container">
+            <button id="yesButton" onclick="handleYes()">Yes</button>
+            <button id="noButton" onclick="handleNo()">No</button>
+        </div>
+        
+        <div id="successMessage" style="display: none;">
+            <div class="success-message">Yay!!! 💖🎉</div>
+        </div>
+    </div>
 
-    <h1>Welcome to the Valentaine Page</h1>
-    <p>This is a placeholder page for Valentaine.</p>
+    <script>
+        const NO_PHRASES = [
+            "No 💔",
+            "Pretty please? 🥺",
+            "But we'd be so cute together! 💕",
+            "One more chance, pookie?",
+            "Don't break my heart :(",
+            "What about a maybe?",
+            "Please don't do this to me, I'm fragile",
+        ];
 
-    
-    
+        let noClicks = 0;
+        let isValentine = false;
+
+        const yesButton = document.getElementById('yesButton');
+        const noButton = document.getElementById('noButton');
+        const bearImage = document.getElementById('bearImage');
+        const question = document.getElementById('question');
+        const buttonsContainer = document.getElementById('buttonsContainer');
+        const successMessage = document.getElementById('successMessage');
+
+        function handleYes() {
+            if (isValentine) return;
+            
+            isValentine = true;
+            
+            // Change the bear image
+            bearImage.src = "https://media.tenor.com/f1xnRxTRxLAAAAAj/bears-with-kisses-bg.gif";
+            
+            // Hide question and buttons
+            question.style.display = 'none';
+            buttonsContainer.style.display = 'none';
+            
+            // Show success message
+            successMessage.style.display = 'block';
+            
+            // Create floating hearts
+            createFloatingHearts();
+        }
+
+        function handleNo() {
+            noClicks++;
+            
+            // Increase the Yes button size
+            const newSize = (noClicks * 20) + 16;
+            const newNoSize = Math.max(16 - noClicks * 2);
+            yesButton.style.fontSize = `${newSize}px`;
+            noButton.style.fontSize = `${newNoSize}px`;
+            
+            // Change the No button text
+            const phraseIndex = Math.min(noClicks - 1, NO_PHRASES.length - 1);
+            noButton.textContent = NO_PHRASES[phraseIndex];
+            
+            // Make the bear image shake
+            bearImage.style.animation = 'none';
+            setTimeout(() => {
+                bearImage.style.animation = 'shake 0.5s';
+            }, 10);
+        }
+
+        // Create floating hearts animation
+        function createFloatingHearts() {
+            const hearts = ['❤️', '💕', '💖', '💗', '💓', '💝', '💘'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                
+                document.body.appendChild(heart);
+                
+                // Remove heart after animation
+                setTimeout(() => {
+                    heart.remove();
+                }, 6000);
+            }, 300);
+        }
+
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px) rotate(-5deg); }
+                75% { transform: translateX(10px) rotate(5deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
